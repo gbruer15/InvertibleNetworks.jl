@@ -1,9 +1,9 @@
 using InvertibleNetworks, LinearAlgebra, Test, Random
 
 # Data
-nx = 16
-ny = 16
-n_in = 4
+nx = 15
+ny = 17
+n_in = 3
 batchsize = 4
 X_prev = randn(Float32, nx, ny, n_in, batchsize)
 X_curr = randn(Float32, nx, ny, n_in, batchsize)

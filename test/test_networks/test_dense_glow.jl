@@ -8,7 +8,7 @@ using InvertibleNetworks, LinearAlgebra, Test, Random
 Random.seed!(5);
 
 # Define network
-n_in = 1
+n_in = 3
 n_hidden = 4
 batchsize = 2
 K = 2
