@@ -8,8 +8,8 @@ using InvertibleNetworks, LinearAlgebra, Test, Random
 #######################################################################################################################
 # Test invertibility
 # Input
-nx = 16
-ny = 16
+nx = 15
+ny = 17
 n_channel = 4
 n_hidden = 8
 batchsize = 2
