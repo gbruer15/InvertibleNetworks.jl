@@ -196,7 +196,7 @@ function jacobian(ΔX1::AbstractArray{T, N}, Δθ::Array{Parameter, 1},
     X3 = RB.activation.forward(Y2)
     ΔX3 = RB.activation.backward(ΔY2, Y2)
 
-    cdims3 = DCDims(X1, RB.W3.data; nc=2*size(X1, N-1), stride=RB.strides[1], padding=RB.pad[1])
+    cdims3 = DCDims(X1, RB.W3.data; nc=size(RB.W3)[N-1], stride=RB.strides[1], padding=RB.pad[1])
     Y3 = ∇conv_data(X3, RB.W3.data, cdims3)
     ΔY3 = ∇conv_data(ΔX3, RB.W3.data, cdims3) + ∇conv_data(X3, Δθ[3].data, cdims3)
     if RB.fan == true

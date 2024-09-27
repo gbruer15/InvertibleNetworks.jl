@@ -13,21 +13,23 @@ Random.seed!(11)
 # Input
 nx = 24
 ny = 24
-k = 4
-n_in = 2
+k = 7
+n_in = Int(round(k / 2))
+n_out = 2 * Int(floor(k / 2))
 n_hidden = 4
 batchsize = 1
 
 # Input images
-Xa = randn(Float32, nx, ny, Int(k/2), batchsize)
-Xb = randn(Float32, nx, ny, Int(k/2), batchsize)
-Xa0 = randn(Float32, nx, ny, Int(k/2), batchsize)
-Xb0 = randn(Float32, nx, ny, Int(k/2), batchsize)
+X = randn(Float32, nx, ny, k, batchsize)
+Xa, Xb = tensor_split(X)
+X0 = randn(Float32, nx, ny, k, batchsize)
+Xa0, Xb0 = tensor_split(X0)
 dXa = Xa - Xa0
 dXb = Xb - Xb0
 
+# error("stop")
 # 1x1 convolution and residual blocks
-RB = ResidualBlock(n_in, n_hidden; fan=true)
+RB = ResidualBlock(n_in, n_hidden; n_out, fan=true)
 L = CouplingLayerBasic(RB; logdet=true)
 
 ###################################################################################################
@@ -102,7 +104,7 @@ function loss(L, Xa, Xb, Ya, Yb)
 end
 
 # Invertible layers
-RB0 = ResidualBlock(n_in, n_hidden; fan=true)
+RB0 = ResidualBlock(n_in, n_hidden; n_out, fan=true)
 L = CouplingLayerBasic(RB; logdet=true)
 L01 = CouplingLayerBasic(RB; logdet=true)
 L02 = CouplingLayerBasic(RB0; logdet=true)
@@ -173,7 +175,7 @@ function loss(L, Xa, Xb, Ya, Yb)
 end
 
 # Invertible layers
-RB0 = ResidualBlock(n_in, n_hidden; fan=true)
+RB0 = ResidualBlock(n_in, n_hidden; n_out, fan=true)
 L = reverse(CouplingLayerBasic(RB; logdet=true))
 L01 = reverse(CouplingLayerBasic(RB; logdet=true))
 L02 = reverse(CouplingLayerBasic(RB0; logdet=true))
@@ -235,22 +237,22 @@ end
 # Gradient test
 
 # Initialization
-RB0 = ResidualBlock(n_in, n_hidden; fan=true)
+RB0 = ResidualBlock(n_in, n_hidden; n_out, fan=true)
 L0 = CouplingLayerBasic(RB0; logdet=true, activation=Sigmoid2Layer())
 θ0 = deepcopy(get_params(L0))
-RB = ResidualBlock(n_in, n_hidden; fan=true)
+RB = ResidualBlock(n_in, n_hidden; n_out, fan=true)
 L = CouplingLayerBasic(RB; logdet=true, activation=Sigmoid2Layer())
 θ = deepcopy(get_params(L))
-X1 = randn(Float32, nx, ny, n_in, batchsize)
-X2 = randn(Float32, nx, ny, n_in, batchsize)
+
+X1, X2 = tensor_split(randn(Float32, nx, ny, k, batchsize))
 
 # Perturbation (normalized)
 dθ = θ-θ0
 for i = 1:length(θ)
     dθ[i] = norm(θ0[i])*dθ[i]/(norm(dθ[i]).+1f-10)
 end
-dX1 = randn(Float32, nx, ny, n_in, batchsize); dX1 = norm(X1)*dX1/norm(dX1)
-dX2 = randn(Float32, nx, ny, n_in, batchsize); dX2 = norm(X2)*dX2/norm(dX2)
+dX1 = randn(Float32, size(X1)); dX1 = norm(X1)*dX1/norm(dX1)
+dX2 = randn(Float32, size(X2)); dX2 = norm(X2)*dX2/norm(dX2)
 
 # Jacobian eval
 dY1, dY2, Y1, Y2 = L.jacobian(dX1, dX2, dθ, X1, X2)

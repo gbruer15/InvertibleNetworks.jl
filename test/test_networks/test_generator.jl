@@ -16,9 +16,7 @@ function swirl(batchsize; noise=.5f0)
 end
 
 # Define network
-nx = 1
-ny = 1
-n_in = 2
+n_in = 3
 n_hidden = 32
 batchsize = 10
 depth = 2

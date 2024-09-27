@@ -17,10 +17,10 @@ expected_f2 = 1f0 / hfactor ^2f0
 m = MersenneTwister()
 
 # Define network
-nx = 32
-ny = 32
-nz = 32
-n_in = 2
+nx = 29
+ny = 31
+nz = 37
+n_in = 3
 n_hidden = 4
 batchsize = 2
 L = 2

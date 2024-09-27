@@ -6,9 +6,9 @@ using InvertibleNetworks, LinearAlgebra, Test, Random
 Random.seed!(2)
 
 # Define network
-nx = 16
-ny = 16
-n_in = 2
+nx = 13
+ny = 17
+n_in = 3
 n_hidden = 4
 batchsize = 2
 L = 2

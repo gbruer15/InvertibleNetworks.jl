@@ -83,15 +83,17 @@ function CouplingLayerHINT(n_in::Int64, n_hidden::Int64; logdet=false, permute="
     n = get_depth(n_in)
     CL = Array{CouplingLayerBasic}(undef, n)
     for j=1:n
-        CL[j] = CouplingLayerBasic(Int(n_in/2^j), n_hidden;activation=activation, k1=k1, k2=k2, p1=p1, p2=p2,
-                                   s1=s1, s2=s2, logdet=logdet, ndims=ndims)
+        n_in_j = Int(round(n_in/2^j))
+        n_out_j = 2 * Int(floor(n_in/2^j))
+        CL[j] = CouplingLayerBasic(n_in_j, n_hidden;activation=activation, k1=k1, k2=k2, p1=p1, p2=p2,
+                                   s1=s1, s2=s2, logdet=logdet, ndims=ndims, n_out=n_out_j)
     end
 
     # Permutation using 1x1 convolution
     if permute == "full" || permute == "both"
         C = Conv1x1(n_in)
     elseif permute == "lower"
-        C = Conv1x1(Int(n_in/2))
+        C = Conv1x1(Int(round(n_in/2)))
     else
         C = nothing
     end

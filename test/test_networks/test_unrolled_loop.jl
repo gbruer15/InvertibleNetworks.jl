@@ -3,10 +3,10 @@ using InvertibleNetworks, LinearAlgebra, Test, Random
 Random.seed!(11)
 
 # Input
-nx = 16
-ny = 16
-nz = 16
-n_in = 2
+nx = 11
+ny = 13
+nz = 17
+n_in = 3
 n_hidden = 4
 batchsize = 2
 maxiter = 2

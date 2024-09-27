@@ -10,7 +10,7 @@ device = InvertibleNetworks.CUDA.functional() ? gpu : cpu
 Random.seed!(3);
 
 # Define network
-nx = 32; ny = 32; nz = 32
+nx = 29; ny = 31; nz = 37
 n_in = 3
 n_cond = 3
 n_hidden = 4
@@ -53,7 +53,7 @@ end
 
 Random.seed!(3);
 # Define network
-nx = 32; ny = 32; nz = 32
+nx = 29; ny = 31; nz = 37
 n_in = 2
 n_cond = 2
 n_hidden = 4
